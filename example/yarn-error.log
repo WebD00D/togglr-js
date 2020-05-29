@@ -1,0 +1,52 @@
+Arguments: 
+  /Users/christian/.nvm/versions/node/v10.15.1/bin/node /usr/local/Cellar/yarn/1.21.1/libexec/bin/yarn.js
+
+PATH: 
+  /Users/christian/.rvm/gems/ruby-2.6.5/bin:/Users/christian/.rvm/gems/ruby-2.6.5@global/bin:/Users/christian/.rvm/rubies/ruby-2.6.5/bin:/Users/christian/.nvm/versions/node/v10.15.1/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/christian/.rvm/bin
+
+Yarn version: 
+  1.21.1
+
+Node version: 
+  10.15.1
+
+Platform: 
+  darwin x64
+
+Trace: 
+  Error: ENOENT: no such file or directory, lstat '/Users/christian/Desktop/code/togglr-js/node_modules/react-scripts/node_modules/@babel/plugin-syntax-object-rest-spread'
+
+npm manifest: 
+  {
+    "name": "togglr-js-example",
+    "homepage": "https://WebD00D.github.io/togglr-js",
+    "version": "0.0.0",
+    "private": true,
+    "dependencies": {
+      "react": "link:../node_modules/react",
+      "react-dom": "link:../node_modules/react-dom",
+      "react-scripts": "link:../node_modules/react-scripts",
+      "togglr-js": "link:.."
+    },
+    "scripts": {
+      "start": "node ../node_modules/react-scripts/bin/react-scripts.js start",
+      "build": "node ../node_modules/react-scripts/bin/react-scripts.js build",
+      "test": "node ../node_modules/react-scripts/bin/react-scripts.js test",
+      "eject": "node ../node_modules/react-scripts/bin/react-scripts.js eject"
+    },
+    "eslintConfig": {
+      "extends": "react-app"
+    },
+    "browserslist": [
+      ">0.2%",
+      "not dead",
+      "not ie <= 11",
+      "not op_mini all"
+    ]
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

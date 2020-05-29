@@ -1,10 +1,18 @@
 import React from 'react'
 
-import { ExampleComponent } from 'togglr-js'
+import { FeatureFlagProvider, FeatureFlag } from 'togglr-js'
 import 'togglr-js/dist/index.css'
 
 const App = () => {
-  return <ExampleComponent text="Create React Library Example 😄" />
+  return (
+    <div>
+      <FeatureFlagProvider clientKey="ae44c4009cd">
+        <FeatureFlag flagName='A'>
+          <div>Test</div>
+        </FeatureFlag>
+      </FeatureFlagProvider>
+    </div>
+  )
 }
 
 export default App
