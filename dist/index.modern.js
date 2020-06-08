@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import firebase from 'firebase';
 
-let database;
+var database;
 var firebaseConfig = {
   apiKey: 'AIzaSyB0pXi3EBdc9p33uQvDMQG6SeCeuzpcHDk',
   authDomain: 'react-togglr.firebaseapp.com',
@@ -16,22 +16,25 @@ database = firebase.initializeApp(firebaseConfig);
 firebase.analytics();
 var database$1 = database;
 
-const FeatureFlagContext = React.createContext([]);
-const FeatureFlagProvider = ({
-  organizationKey,
-  environment,
-  children
-}) => {
-  const [flagsRetrieved, setFlagsRetrieved] = useState({});
-  useEffect(() => {
+var FeatureFlagContext = React.createContext([]);
+var FeatureFlagProvider = function FeatureFlagProvider(_ref) {
+  var organizationKey = _ref.organizationKey,
+      environment = _ref.environment,
+      children = _ref.children;
+
+  var _useState = useState({}),
+      flagsRetrieved = _useState[0],
+      setFlagsRetrieved = _useState[1];
+
+  useEffect(function () {
     if (!organizationKey) {
       console.error('togglr-js configiration error: No organizationKey set');
       return;
     }
 
-    const clientFlags = database$1.database().ref(`organizations/${organizationKey}/flags`);
-    clientFlags.on('value', snapshot => {
-      const flags = snapshot.val();
+    var clientFlags = database$1.database().ref("organizations/" + organizationKey + "/flags");
+    clientFlags.on('value', function (snapshot) {
+      var flags = snapshot.val();
 
       if (flags) {
         setFlagsRetrieved(flags);
@@ -40,29 +43,29 @@ const FeatureFlagProvider = ({
       }
     });
   }, []);
-  const FLAG_CONTEXT_DATA = {
-    environment,
+  var FLAG_CONTEXT_DATA = {
+    environment: environment,
     flags: flagsRetrieved
   };
   return /*#__PURE__*/React.createElement(FeatureFlagContext.Provider, {
     value: FLAG_CONTEXT_DATA
   }, children);
 };
-const FeatureFlag = ({
-  flagName: _flagName = '',
-  children
-}) => {
-  const context = useContext(FeatureFlagContext);
+var FeatureFlag = function FeatureFlag(_ref2) {
+  var _ref2$flagName = _ref2.flagName,
+      flagName = _ref2$flagName === void 0 ? '' : _ref2$flagName,
+      children = _ref2.children;
+  var context = useContext(FeatureFlagContext);
   if (!Object.keys(context.flags).length) return null;
-  let on = false;
-  Object.keys(context.flags).forEach(key => {
-    const flag = context.flags[key];
+  var on = false;
+  Object.keys(context.flags).forEach(function (key) {
+    var flag = context.flags[key];
 
-    if (flag.flagKeyName === _flagName && flag.active) {
+    if (flag.flagKeyName === flagName && flag.active) {
       if (flag.environments === '') {
         on = true;
       } else {
-        const envArray = flag.environments.split(',');
+        var envArray = flag.environments.split(',');
 
         if (envArray.includes(context.environment)) {
           on = true;
