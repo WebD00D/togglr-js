@@ -21,7 +21,7 @@ const App = () => {
     <div>
       <FeatureFlagProvider
         environment='production'
-        organizationKey='b5c3bdce-8e67-452b-98ef-3bb208532150'
+        organizationKey='<ORGANIZATION_KEY>'
       >
         <h1>My Awesome App</h1>
         <p>Pretty cool isn't it? Lorem ipsum dolar set</p>
