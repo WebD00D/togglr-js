@@ -2,26 +2,56 @@ function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'defau
 
 var React = require('react');
 var React__default = _interopDefault(React);
+var firebase = _interopDefault(require('firebase'));
+
+var database;
+var firebaseConfig = {
+  apiKey: 'AIzaSyB0pXi3EBdc9p33uQvDMQG6SeCeuzpcHDk',
+  authDomain: 'react-togglr.firebaseapp.com',
+  databaseURL: 'https://react-togglr.firebaseio.com',
+  projectId: 'react-togglr',
+  storageBucket: 'react-togglr.appspot.com',
+  messagingSenderId: '883468833586',
+  appId: '1:883468833586:web:cf53cab617302ab2f87d2b',
+  measurementId: 'G-NHR0E20SST'
+};
+database = firebase.initializeApp(firebaseConfig);
+firebase.analytics();
+var database$1 = database;
 
 var FeatureFlagContext = React__default.createContext([]);
 var FeatureFlagProvider = function FeatureFlagProvider(_ref) {
-  var children = _ref.children;
+  var organizationKey = _ref.organizationKey,
+      environment = _ref.environment,
+      children = _ref.children;
 
-  var _useState = React.useState({
-    flags: []
-  }),
+  var _useState = React.useState({}),
       flagsRetrieved = _useState[0],
       setFlagsRetrieved = _useState[1];
 
   React.useEffect(function () {
-    setTimeout(function () {
-      setFlagsRetrieved({
-        flags: ['A', 'B', 'C']
-      });
-    }, 3000);
+    if (!organizationKey) {
+      console.error('togglr-js configiration error: No organizationKey set');
+      return;
+    }
+
+    var clientFlags = database$1.database().ref("organizations/" + organizationKey + "/flags");
+    clientFlags.on('value', function (snapshot) {
+      var flags = snapshot.val();
+
+      if (flags) {
+        setFlagsRetrieved(flags);
+      } else {
+        setFlagsRetrieved({});
+      }
+    });
   }, []);
+  var FLAG_CONTEXT_DATA = {
+    environment: environment,
+    flags: flagsRetrieved
+  };
   return /*#__PURE__*/React__default.createElement(FeatureFlagContext.Provider, {
-    value: flagsRetrieved
+    value: FLAG_CONTEXT_DATA
   }, children);
 };
 var FeatureFlag = function FeatureFlag(_ref2) {
@@ -29,8 +59,24 @@ var FeatureFlag = function FeatureFlag(_ref2) {
       flagName = _ref2$flagName === void 0 ? '' : _ref2$flagName,
       children = _ref2.children;
   var context = React.useContext(FeatureFlagContext);
-  if (!context.flags.includes(flagName)) return null;
-  return children;
+  if (!Object.keys(context.flags).length) return null;
+  var on = false;
+  Object.keys(context.flags).forEach(function (key) {
+    var flag = context.flags[key];
+
+    if (flag.flagKeyName === flagName && flag.active) {
+      if (flag.environments === '') {
+        on = true;
+      } else {
+        var envArray = flag.environments.split(',');
+
+        if (envArray.includes(context.environment)) {
+          on = true;
+        }
+      }
+    }
+  });
+  return on ? children : null;
 };
 
 exports.FeatureFlag = FeatureFlag;
